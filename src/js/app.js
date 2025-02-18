@@ -23,27 +23,42 @@ import "../style/index.css";
     }
  */
 function render(variables = {}) {
-  console.log("These are the current variables: ", variables); // print on the console
-  // here we ask the logical questions to make decisions on how to build the html
-  // if includeCover==false then we reset the cover code without the <img> tag to make the cover transparent.
-  let cover = `<div class="cover"><img src="${variables.background}" /></div>`;
-  if (variables.includeCover == false) cover = "<div class='cover'></div>";
+  console.log("These are the current variables: ", variables); // Debugging
 
-  // reset the website body with the new html output
-  document.querySelector("#widget_content").innerHTML = `<div class="widget">
-            ${cover}
-          <img src="${variables.avatarURL}" class="photo" />
-          <h1>Lucy Boilett</h1>
-          <h2>Web Developer</h2>
-          <h3>Miami, USA</h3>
-          <ul class="position-right">
-            <li><a href="https://twitter.com/4geeksacademy"><i class="fab fa-twitter"></i></a></li>
-            <li><a href="https://github.com/4geeksacademy"><i class="fab fa-github"></i></a></li>
-            <li><a href="https://linkedin.com/school/4geeksacademy"><i class="fab fa-linkedin"></i></a></li>
-            <li><a href="https://instagram.com/4geeksacademy"><i class="fab fa-instagram"></i></a></li>
-          </ul>
-        </div>
-    `;
+  // Handling cover image
+  let cover = variables.includeCover
+    ? `<div class="cover"><img src="${variables.background ||
+        "https://via.placeholder.com/300"}" /></div>`
+    : `<div class="cover"></div>`;
+
+  // Handling social media links dynamically
+  let socialMediaLinks = "";
+  if (variables.twitter)
+    socialMediaLinks += `<li><a href="https://twitter.com/${variables.twitter}" class="fab fa-twitter"></a></li>`;
+  if (variables.github)
+    socialMediaLinks += `<li><a href="https://github.com/${variables.github}" class="fab fa-github"></a></li>`;
+  if (variables.linkedin)
+    socialMediaLinks += `<li><a href="https://linkedin.com/in/${variables.linkedin}" class="fab fa-linkedin"></a></li>`;
+  if (variables.instagram)
+    socialMediaLinks += `<li><a href="https://instagram.com/${variables.instagram}" class="fab fa-instagram"></a></li>`;
+
+  // Inject HTML dynamically with proper variables
+  document.querySelector("#widget_content").innerHTML = `
+            <div class="widget">
+                ${cover}
+                <img src="${variables.avatarURL ||
+                  "https://via.placeholder.com/100"}" class="photo" />
+                <h1>${variables.name || "Your Name"} ${variables.lastName ||
+    "Your Lastname"}</h1>
+                <h2>${variables.role || "Web Developer"}</h2>
+                <h3>${variables.city || "City"}, ${variables.country ||
+    "Country"}</h3>
+                <ul class="${variables.socialMediaPosition ||
+                  "position-right"}">
+                    ${socialMediaLinks}
+                </ul>
+            </div>
+        `;
 }
 
 /**
